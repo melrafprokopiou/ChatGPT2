@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum GPT Console</title>
+    <!-- FIXED LINKS BELOW -->
+    <script src="https://puter.com"></script>
+    <script src="https://tailwindcss.com"></script>
+    <style>
+        body { background-color: #050505; color: #00ff41; font-family: 'Courier New', Courier, monospace; overflow: hidden; }
+        .terminal-box { border: 1px solid #00ff41; box-shadow: 0 0 15px rgba(0, 255, 65, 0.2); height: 70vh; }
+        .user-input { background: transparent; border: none; border-bottom: 2px solid #00ff41; color: #fff; outline: none; width: 100%; }
+        .scanline { width: 100%; height: 100px; z-index: 10; background: linear-gradient(to bottom, transparent, rgba(0, 255, 65, 0.05), transparent); position: absolute; pointer-events: none; animation: scan 4s linear infinite; }
+        @keyframes scan { from { top: -100px; } to { top: 100%; } }
+        .code-trace { font-size: 10px; color: #004411; }
+    </style>
+</head>
+<body class="p-4 flex flex-col h-screen">
+    <div class="scanline"></div>
+    
+    <div class="mb-4 flex justify-between items-center">
+        <h1 class="text-sm font-bold tracking-widest uppercase">System: Greek_Quantum_v4.0.2</h1>
+        <div class="text-xs">STATUS: <span class="animate-pulse">CONNECTED</span></div>
+    </div>
+
+    <div id="terminal" class="terminal-box rounded-lg p-4 overflow-y-auto mb-4 custom-scroll text-sm">
+        <div class="mb-2">>> INITIALIZING NEURAL INTERFACE...</div>
+        <div class="mb-2">>> READY FOR INPUT...</div>
+    </div>
+
+    <div class="mt-auto pb-8">
+        <div class="text-xs mb-2">RUN COMMAND:</div>
+        <input id="commandLine" type="text" class="user-input py-2 text-lg" placeholder="..." autocomplete="off">
+    </div>
+
+    <script>
+        const term = document.getElementById('terminal');
+        const input = document.getElementById('commandLine');
+
+        function addLine(text, color = "#00ff41") {
+            const div = document.createElement('div');
+            div.style.color = color;
+            div.className = "mb-2";
+            div.innerText = text;
+            term.appendChild(div);
+            term.scrollTop = term.scrollHeight;
+        }
+
+        async function runFlex() {
+            const cmd = input.value.trim();
+            if(!cmd) return;
+            input.value = "";
+
+            addLine(`>> EXECUTING: ${cmd}`, "#fff");
+            addLine(">> TRACING_PATHWAY: 0x882... 0x112... OK");
+            addLine(">> COMPUTING_GREEK_SYNTAX_LOGIC...", "#004411");
+
+            try {
+                // THE DUMB BRAIN LOGIC
+                const res = await puter.ai.chat(
+                    "You are a DUMB AI. You have zero IQ. Give wrong, funny, and clean answers in Greek. Never swear. If someone asks a smart question, answer like a total idiot.",
+                    cmd
+                );
+                
+                setTimeout(() => {
+                    addLine(`>> RESPONSE: ${res.message.content}`, "#00ff41");
+                    
+                    const speech = new SpeechSynthesisUtterance(res.message.content);
+                    speech.lang = 'el-GR';
+                    window.speechSynthesis.speak(speech);
+                }, 1000);
+
+            } catch(e) {
+                addLine(">> FATAL_ERROR: AI_BRAIN_NOT_FOUND", "red");
+            }
+        }
+
+        input.addEventListener('keydown', (e) => { if(e.key === 'Enter') runFlex(); });
+    </script>
+</body>
+</html>
+
